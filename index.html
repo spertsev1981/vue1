@@ -110,7 +110,7 @@
                     </div>
                     <div class="modal-body">
                         <div><label>Name:</label> <input v-model.trim="uName" placeholder="Edit me"/></div>
-                        <div><label>Age:</label> <input v-model="uAge" placeholder="Edit me"/></div>
+                        <div><label>Age:</label> <input v-model.number="uAge" placeholder="Edit me"/></div>
                     </div>
                     <div class="modal-buttons">
                         <button class="btn btn-lg btn-default" @click="save()" type="button">Save</button>
