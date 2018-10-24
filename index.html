@@ -80,7 +80,7 @@
         <thead>
         <tr>
             <th>#</th>
-            <th v-for="key in columns"> {{key|fUpper}}</th>
+            <th v-for="key in columns" :key="key"> {{key|fUpper}}</th>
             <th></th>
         <tr/>
         </thead>
@@ -113,7 +113,7 @@
                         <div><label>Age:</label> <input v-model.number="uAge" placeholder="Edit me"/></div>
                     </div>
                     <div class="modal-buttons">
-                        <button class="btn btn-lg btn-default" @click="save()" type="button">Save</button>
+                        <button class="btn btn-lg btn-default" @click="save" type="button">Save</button>
                     </div>
                 </div>
             </div>
@@ -131,12 +131,19 @@
         ],
         methods: {
             remove(id) {
-                this.$emit('remove-user', id);
+                this.$emit("remove-user", id);
             },
             edit(id) {
-                this.$emit('edit-user', id);
+                this.$emit("edit-user", id);
             }
         },
+        filters: {
+            fUpper: function (value) {
+                if (!value) return ""
+                value = value.toString()
+                return value.charAt(0).toUpperCase() + value.slice(1)
+            }
+        }
     };
 
     var editUser = {
@@ -157,20 +164,20 @@
         },
         methods: {
             save() {
-                this.$emit('save-user', this.uName, this.uAge);
+                this.$emit("save-user", this.uName, this.uAge);
             }
         }
     };
 
     new Vue({
-        el: '#app',
+        el: "#app",
         components: {"user-list": userList, "modal": editUser},
         data: function () {
             return {
                 columns: ["name", "company", "gender", "age"],
-                list: null,
+                list: [],
                 showModal: false,
-                user: null
+                user: {}
             }
         },
         computed: {
@@ -178,26 +185,22 @@
                 return this.list ? this.list.length : 0;
             }
         },
-        created: function () {
-            Vue.filter('fUpper', function (value) {
-                if (!value) return ''
-                value = value.toString()
-                return value.charAt(0).toUpperCase() + value.slice(1)
-            });
-        },
         mounted() {
-            axios
-                .get('http://www.json-generator.com/api/json/get/ceNyahPtSG?indent=2')
-                .then(response => {
-                    this.list = response.data;
-                    console.log("Result", "Success");
-                })
-                .catch(function (error) {
-                    console.log("Result", "Failure");
-                    console.error(error);
-                });
+            this.loadData();
         },
         methods: {
+            loadData() {
+                axios
+                    .get("http://www.json-generator.com/api/json/get/ceNyahPtSG?indent=2")
+                    .then(response => {
+                        this.list = response.data;
+                        console.log("Result", "Success");
+                    })
+                    .catch(function (error) {
+                        console.log("Result", "Failure");
+                        console.error(error);
+                    });
+            },
             removeUser(id) {
                 this.list = this.list.filter(item => item._id !== id);
             },
