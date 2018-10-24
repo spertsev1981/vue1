@@ -86,7 +86,7 @@
         </thead>
         <tbody>
         <tr v-for="(user, index) in list" :key="user.id">
-            <td>{{ index }}</td>
+            <td>{{ index + 1}}</td>
             <td v-for="key in columns"> {{user[key]}}</td>
             <td>
                 <button class="btn btn-lg btn-primary" @click="edit(user._id)">Edit</button>
